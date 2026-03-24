@@ -16,3 +16,5 @@ text <- content(resposta, "text")
 dades <- fromJSON(text)
 
 dades$current_weather
+
+dades$elevation
