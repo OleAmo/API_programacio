@@ -68,23 +68,72 @@ print(frase)
 #  ---- OBTENIR UN SEGUIT DE DADES ------
 #  --------------------------------------
 
-#   L'API OPEN METO permet OBTENIR MÉS DADES
-#   Puc OBTENIR
-#     Per un intervar de dies
-#     Les dades de cada hora
+#   L'API OPEN METO té una VERSIÓ amb DADES HISTÒRIQUES
+#   La URL és diferent que l'exercici anterior
+
+#     Ara puc demanar un INTERVAL de DIES
+#     Del 1 de Març al 3 de Març
+#     Li demano Temperatura, Humitat i Vent
 
 
 
-res <- GET(
-  "https://api.open-meteo.com/v1/forecast",
+res_2 <- GET(
+  "https://archive-api.open-meteo.com/v1/archive",
   query = list(
     latitude = 41.38,
     longitude = 2.17,
     start_date = "2024-03-01",
-    end_date = "2024-03-01",
-    hourly = "temperature_2m"
+    end_date = "2024-03-03",
+    hourly = "temperature_2m,relative_humidity_2m,windspeed_10m"
   )
-)
+)  
 
-text <- content(res, "text")
-dades <- fromJSON(text)
+text_2 <- content(res_2, "text")
+dades_2 <- fromJSON(text_2)
+
+str(dades_2)
+
+#  EXPLORO les DADES
+#  -----------------
+
+#  Començo amb les TEMPERATURES
+#  Veig que hi ha 72 Temp, 72 humitats I 72 vents
+#  3 dies = 72 hores
+#  Pertant tinc per cada hora les 3 variables
+
+
+
+dia <- dades_2$hourly$time
+temp <- dades_2$hourly$temperature_2m
+humitat <- dades_2$hourly$relative_humidity_2m
+wind <- dades_2$hourly$windspeed_10m
+
+length(temp)
+
+#  Creo una FUNCIÓ
+#  Aquesta funció em retornarà frases.
+
+
+analisis <- function(dia,temp,humitat,wind,num){
+  
+  t <- temp[as.numeric(num)]
+  hum <- humitat[as.numeric(num)]
+  w <- wind[as.numeric(num)]
+  dia_v1 <- dia[as.numeric(num)]
+  dia_v2 <- str_split_1(dia_v1, "T")[1]
+  hora <- str_split_1(dia_v1, "T")[2]
+  
+  
+  frase <- paste('Dades del dia ',dia_v2,
+                 ', preses a les ', hora,
+                 '. La Temperatura és de ',t,
+                 ', la Humitat R és de ',hum,
+                 ', el Vent es de ',w)
+  
+  
+  return(print(frase))
+  
+}
+
+analisis(dia,temp,humitat,wind,5)
+analisis(dia,temp,humitat,wind,10)
