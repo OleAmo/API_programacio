@@ -137,3 +137,16 @@ analisis <- function(dia,temp,humitat,wind,num){
 
 analisis(dia,temp,humitat,wind,5)
 analisis(dia,temp,humitat,wind,10)
+
+
+#  COMPARO les DADES
+#  -----------------
+
+#   -) Puc saver la MITJA x dia
+#   -) Màxima i Minimna x dia
+#   -) Quin dia a una mateixa Hora feina més o menys fred
+
+#   -) Buscar relació de Humitat Relativa i Temp
+#   -) Buscar relació de Temp i Vent
+
+
