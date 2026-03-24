@@ -3,6 +3,7 @@
 
 library(httr)
 library(jsonlite)
+library(tidyverse)
 
 
 #  ---- CONCEPTES BASICS ------
@@ -49,17 +50,18 @@ str(dades)
 
 temp <- dades$current_weather$temperature
 wind <- dades$current_weather$windspeed
-dia <- dades$current_weather$time
-
+dia_v1 <- dades$current_weather$time
+dia_v2 <- str_split_1(dia_v1, "T")[1]
+hora <- str_split_1(dia_v1, "T")[2]
+  
 temp_units <- dades$current_weather_units$temperature
 wind_units <- dades$current_weather_units$windspeed
-dia_units <- dades$current_weather_units$time
 
-str_split(dia_units, "T")
 
-frase <- paste('La Temperatura és de ',temp,temp_units,
-               ', el vent es de ',wind,wind_units,
-               'en el dia ',dia)
+frase <- paste('Dades del dia ',dia_v2,
+               ', preses a les ', hora,
+               '. La Temperatura és de ',temp,temp_units,
+               ', el Vent es de ',wind,wind_units)
   
 print(frase)
 
