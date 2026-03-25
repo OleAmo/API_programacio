@@ -335,6 +335,7 @@ analisis_AVERAGES_DAY(dades_2$hourly)
 #   -) FER MES EFICIENT LO DELS 3 DIES 
 #   -) Creo funcions diferents. Unes criden a altres
 
+
 calcul_dades <- function(dades){
   max1 <- max(dades[1:24,])
   max2 <- max(dades[25:48,])
@@ -414,8 +415,35 @@ analisis_AVERAGES_DAY_v2 <- function(dades){
 analisis_AVERAGES_DAY_v2(dades_2$hourly)
 
 
+#  FUNCIO 04 = DADES a DATAFRAME
+#  ----------------------------
 
-#  EXERCICI 02 = DADES
+#   -) Puc saver la Màxima i Minimna x dia
+#   -) Dades a sabeR (Temp, Humitat, Vent, Dia, Latitud)
+
+#   -) Creo un DATA FRAME amb la info
+#   -) La info la associo a PUNTS (x,y)
+#   -) La podré representar després a QGIS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  EXERCICI 99999 = DADES
 #  -----------------
 
 #   -) Buscar INFO de DIVERSES LOCALITZACIONS
