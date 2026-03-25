@@ -117,8 +117,13 @@ wind <- dades_2$hourly$windspeed_10m
 
 length(temp)
 
-#  Creo una FUNCIÓ
-#  Aquesta funció em retornarà frases.
+
+
+#  FUNCIÓ 01
+#  ----------
+
+#  Aquesta funció em retornarà dades
+#  Les retornarè en format frase
 
 
 analisis <- function(dia,temp,humitat,wind,num){
@@ -145,6 +150,53 @@ analisis <- function(dia,temp,humitat,wind,num){
 
 analisis(dia,temp,humitat,wind,5)
 analisis(dia,temp,humitat,wind,10)
+
+
+#  FUNCIÓ 02
+#  ----------
+
+#  Aquesta funció em retornarà dades
+#  Les retornarè en format frase
+
+
+
+analisis_v2 <- function(dades,num){
+  
+  #  Primer transormo les dades amb DATA FRAME
+  #  Així despres puc accedir a les dades individuals
+  
+  #  eXERMPLE= df[2][23,]
+  
+  #      -) El [2] = son TEMPERATURES
+  #      -) El [23,] = és el dia 23
+  
+  df <- data.frame(dades)
+  
+  t <- df[2][as.numeric(num),]
+  hum <- df[3][as.numeric(num),]
+  w <- df[4][as.numeric(num),]
+  dia_v1 <- df[1][as.numeric(num),]
+  dia_v2 <- str_split_1(dia_v1, "T")[1]
+  hora <- str_split_1(dia_v1, "T")[2]
+  
+  
+  frase <- paste0('DIA = ',dia_v2,'\n',
+                  'Hora = (', hora,') \n',
+                  'Temperatura = ',t,'\n',
+                  'Humitat Relativa = ',hum,'\n',
+                  'Velocitat del Vent = ',w,'\n')
+  
+  
+  
+  return(cat(frase))
+  
+}
+
+
+analisis_v2(dades_2$hourly,5)
+analisis_v2(dades_2$hourly,10)
+
+
 
 
 #  EXERCICI 01 = DADES
