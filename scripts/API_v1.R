@@ -199,15 +199,11 @@ analisis_v2(dades_2$hourly,10)
 
 
 
-#  EXERCICI 01 = DADES
-#  -----------------
+#  FUNCIO 03 = DADES MAX i MIN
+#  ----------------------------
 
-#   -) Puc saver la MITJA x dia
-#   -) Màxima i Minimna x dia
-#   -) Quin dia a una mateixa Hora feina més o menys fred
-
-#   -) Buscar relació de Humitat Relativa i Temp
-#   -) Buscar relació de Temp i Vent
+#   -) Puc saver la MITJA ALS 3 DIES
+#   -) Màxima i Minimna ALS 3 DIES
 
 
 analisis_AVERAGES <- function(dades){
@@ -261,6 +257,90 @@ analisis_AVERAGES <- function(dades){
 }
 
 analisis_AVERAGES(dades_2$hourly)
+
+
+#  FUNCIO 03 = DADES MAX i MIN - EN 3 DIES
+#  ---------------------------------------
+
+#   -) Puc saver la MITJA x dia
+#   -) Màxima i Minimna x dia
+
+
+
+analisis_AVERAGES_DAY <- function(dades){
+  
+  df <- data.frame(dades)
+  
+  t <- df[2]
+  hum <- df[3]
+  w <- df[4]
+  
+  dia_v1 <- df[1]
+  dia_max <- dia_v1[length(dia_v1[,1]),]
+  dia_min <- dia_v1[1,]
+  
+  dia_max_f <- str_split_1(dia_max, "T")[1]
+  dia_min_f <- str_split_1(dia_min, "T")[1]
+  
+  max_t1 <- max(t[1:24,])
+  max_t2 <- max(t[25:48,])
+  max_t3 <- max(t[49:72,])
+  
+  min_t1 <- min(t[1:24,])
+  min_t2 <- min(t[25:48,])
+  min_t3 <- min(t[49:72,])
+  
+  max_hum1 <- max(hum[1:24,])
+  max_hum2 <- max(hum[25:48,])
+  max_hum3 <- max(hum[49:72,])
+  
+  min_hum1 <- min(hum[1:24,])
+  min_hum2 <- min(hum[25:48,])
+  min_hum3 <- min(hum[49:72,])
+  
+  max_hum <- max(hum)
+  min_hum <- min(hum)
+  
+  max_w <- max(w)
+  min_w <- min(w)
+  
+  
+  frase <- paste0('PERÍODE  = (',dia_min_f,' / ',dia_max_f,') \n',
+                  '\n',
+                  'Max Temp = ', max_t1,' - ',max_t2,' - ',max_t3,'\n',
+                  'Min Temp = ', min_t1,' - ',min_t2,' - ',min_t3,'\n',
+                  '\n',
+                  'Max Humitat = ', max_hum1,' - ',max_hum2,' - ',max_hum3,'\n',
+                  'Min Humitat = ', min_hum1,' - ',min_hum2,' - ',min_hum3,'\n',
+                  '\n',
+                  'Max Vent = ', max_w,'\n',
+                  'Min Vent = ', min_w,'\n'
+  )
+  
+  
+  
+  return(cat(frase))
+  
+}
+
+analisis_AVERAGES_DAY(dades_2$hourly)
+
+
+
+
+
+
+
+# -------------------
+# -------------------
+# -------------------
+
+# -------------------  FER MES EFICIENT LO DELS 3 DIES!!
+
+
+
+
+
 
 
 
