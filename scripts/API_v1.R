@@ -210,8 +210,7 @@ analisis_v2(dades_2$hourly,10)
 #   -) Buscar relació de Temp i Vent
 
 
-
-analisis_AVERAGES <- function(dades,num){
+analisis_AVERAGES <- function(dades){
   
   #  Creo una funció 
   #  Per cada punt en retorna un vector
@@ -221,10 +220,47 @@ analisis_AVERAGES <- function(dades,num){
   # Aixi després em serà fàcil de usar per extreure dades de molts punts
   # Tindré molts vectors i em serà facil de treballar amb territoris
   
+  df <- data.frame(dades)
+  
+  t <- df[2]
+  hum <- df[3]
+  w <- df[4]
+  
+  dia_v1 <- df[1]
+  dia_max <- dia_v1[length(dia_v1),]
+  dia_min <- dia_v1[1,]
+  
+  dia_max_f <- str_split_1(dia_max, "T")[1]
+  dia_min_f <- str_split_1(dia_min, "T")[1]
+  
+  max_t <- max(t)
+  min_t <- min(t)
+  
+  max_hum <- max(hum)
+  min_hum <- min(hum)
+  
+  max_w <- max(w)
+  min_w <- min(w)
+  
+  
+  frase <- paste0('PERÍODE  = (',dia_min_f,' / ',dia_max_f,') \n',
+                  'Max Temp = ', max_t,'\n',
+                  'Min Temp = ', min_t,'\n',
+                  '\n',
+                  'Max Humitat = ', max_hum,'\n',
+                  'Min Humitat = ', min_hum,'\n',
+                  '\n',
+                  'Max Vent = ', max_w,'\n',
+                  'Min Vent = ', min_w,'\n'
+                  )
+  
+  
+  
+  return(cat(frase))
   
 }
 
-
+analisis_AVERAGES(dades_2$hourly)
 
 
 
