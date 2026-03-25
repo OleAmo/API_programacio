@@ -58,12 +58,19 @@ temp_units <- dades$current_weather_units$temperature
 wind_units <- dades$current_weather_units$windspeed
 
 
-frase <- paste('Dades del dia ',dia_v2,
-               ', preses a les ', hora,
-               '. La Temperatura és de ',temp,temp_units,
-               ', el Vent es de ',wind,wind_units)
+#  SALT DE LINIES en uns text
+#  s'usa:
+#     -)  paste0()  = la funció
+#     -)  \n        = per indicar els SALT de LÍNIA
+#     -)  cat()     = és com la funcio print
+
+
+frase <- paste0('DIA = ',dia_v2,'\n',
+               'Hora = (', hora,') \n',
+               'Temperatura = ',temp,temp_units,'\n',
+               'Velocitat del Vent = ',wind,wind_units,'\n')
   
-print(frase)
+cat(frase)
 
 #  ---- OBTENIR UN SEGUIT DE DADES ------
 #  --------------------------------------
