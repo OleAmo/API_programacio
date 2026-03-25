@@ -211,6 +211,27 @@ analisis_v2(dades_2$hourly,10)
 
 
 
+analisis_AVERAGES <- function(dades,num){
+  
+  #  Creo una funció 
+  #  Per cada punt en retorna un vector
+  #  Amb la Mitja Temp, Mitja Humitat, Mitja Vent
+  #  També Max Temp, Min Temp,...Max Humitat,....
+  
+  # Aixi després em serà fàcil de usar per extreure dades de molts punts
+  # Tindré molts vectors i em serà facil de treballar amb territoris
+  
+  
+}
+
+
+
+
+
+
+
+
+
 #  EXERCICI 02 = DADES
 #  -----------------
 
