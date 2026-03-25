@@ -227,7 +227,7 @@ analisis_AVERAGES <- function(dades){
   w <- df[4]
   
   dia_v1 <- df[1]
-  dia_max <- dia_v1[length(dia_v1),]
+  dia_max <- dia_v1[length(dia_v1[,1]),]
   dia_min <- dia_v1[1,]
   
   dia_max_f <- str_split_1(dia_max, "T")[1]
@@ -261,8 +261,6 @@ analisis_AVERAGES <- function(dades){
 }
 
 analisis_AVERAGES(dades_2$hourly)
-
-
 
 
 
