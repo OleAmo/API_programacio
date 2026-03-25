@@ -262,9 +262,8 @@ analisis_AVERAGES(dades_2$hourly)
 #  FUNCIO 03 = DADES MAX i MIN - EN 3 DIES
 #  ---------------------------------------
 
-#   -) Puc saver la MITJA x dia
-#   -) Màxima i Minimna x dia
-
+#   -) Puc saver la Màxima i Minimna x dia
+#   -) Dades a saber = ( Temp, Humitat i Vent)
 
 
 analisis_AVERAGES_DAY <- function(dades){
@@ -327,22 +326,101 @@ analisis_AVERAGES_DAY(dades_2$hourly)
 
 
 
+#  FUNCIO 03 = DADES MAX i MIN - EN 3 DIES ( més eficiente)
+#  ---------------------------------------
+
+#   -) Puc saver la Màxima i Minimna x dia
+#   -) Dades a saber = ( Temp, Humitat i Vent)
+
+#   -) FER MES EFICIENT LO DELS 3 DIES 
+#   -) Creo funcions diferents. Unes criden a altres
+
+calcul_dades <- function(dades){
+  max1 <- max(dades[1:24,])
+  max2 <- max(dades[25:48,])
+  max3 <- max(dades[49:72,])
+  
+  min1 <- min(dades[1:24,])
+  min2 <- min(dades[25:48,])
+  min3 <- min(dades[49:72,])
+  
+  text_max <- paste0(max1,' - ',max2,' - ',max3)
+  text_min <- paste0(min1,' - ',min2,' - ',min3)
+  
+  return(list(
+    max1 = max1,
+    max2 = max2,
+    max3 = max3,
+    min1 = min1,
+    min2 = min2,
+    min3 = min3,
+    text_max = text_max,
+    text_min = text_min
+  ))
+}
+
+calcul_dies <- function(df){
+  
+  dia_v1 <- df[1]
+  dia_max <- dia_v1[length(dia_v1[,1]),]
+  dia_min <- dia_v1[1,]
+  
+  dia_max_f <- str_split_1(dia_max, "T")[1]
+  dia_min_f <- str_split_1(dia_min, "T")[1]
+  
+  text <- paste0(dia_min_f,' / ',dia_max_f)
+  
+  return(list(
+    dia_max = dia_max_f,
+    dia_min = dia_min_f,
+    text = text
+    
+  ))
+  
+}
+
+analisis_AVERAGES_DAY_v2 <- function(dades){
+  
+  df <- data.frame(dades)
+  
+  t <- df[2]
+  hum <- df[3]
+  w <- df[4]
+  
+  dia <- calcul_dies(df)
+
+  t_dades <- calcul_dades(t)
+  hum_dades <- calcul_dades(hum)
+  w_dades <- calcul_dades(w)
+  
+  frase <- paste0('PERÍODE  = (',dia$text,') \n',
+                  '\n',
+                  'Max Temp = ',t_dades$text_max,'\n',
+                  'Min Temp = ',t_dades$text_min,'\n',
+                  '\n',
+                  'Max Humitat = ',hum_dades$text_max,'\n',
+                  'Min Humitat = ',hum_dades$text_min,'\n',
+                  '\n',
+                  'Max Vent = ', w_dades$text_max,'\n',
+                  'Min Vent = ', w_dades$text_min,'\n'
+  )
+  
+  
+  return(cat(frase))
+  
+  
+}
+
+analisis_AVERAGES_DAY_v2(dades_2$hourly)
 
 
 
+dia_v1 <- df[1]
+dia_max <- dia_v1[length(dia_v1[,1]),]
+dia_min <- dia_v1[1,]
 
-# -------------------
-# -------------------
-# -------------------
-
-# -------------------  FER MES EFICIENT LO DELS 3 DIES!!
-
-
-
-
-
-
-
+dia_max_f <- str_split_1(dia_max, "T")[1]
+dia_min_f <- str_split_1(dia_min, "T")[1]
 
 
 
