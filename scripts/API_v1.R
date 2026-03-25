@@ -131,14 +131,15 @@ analisis <- function(dia,temp,humitat,wind,num){
   hora <- str_split_1(dia_v1, "T")[2]
   
   
-  frase <- paste('Dades del dia ',dia_v2,
-                 ', preses a les ', hora,
-                 '. La Temperatura és de ',t,
-                 ', la Humitat R és de ',hum,
-                 ', el Vent es de ',w)
+  frase <- paste0('DIA = ',dia_v2,'\n',
+                  'Hora = (', hora,') \n',
+                  'Temperatura = ',t,'\n',
+                  'Humitat Relativa = ',hum,'\n',
+                  'Velocitat del Vent = ',w,'\n')
   
+
   
-  return(print(frase))
+  return(cat(frase))
   
 }
 
@@ -146,7 +147,7 @@ analisis(dia,temp,humitat,wind,5)
 analisis(dia,temp,humitat,wind,10)
 
 
-#  COMPARO les DADES
+#  EXERCICI 01 = DADES
 #  -----------------
 
 #   -) Puc saver la MITJA x dia
@@ -155,5 +156,16 @@ analisis(dia,temp,humitat,wind,10)
 
 #   -) Buscar relació de Humitat Relativa i Temp
 #   -) Buscar relació de Temp i Vent
+
+
+
+#  EXERCICI 02 = DADES
+#  -----------------
+
+#   -) Buscar INFO de DIVERSES LOCALITZACIONS
+#   -) Calcular de cada una si en una SETMANA la TºC puja o no
+#   -) Ho assoccio a un poligon de MUNICIPI
+#   -) Li donc escala de color
+#   -) Ho represento
 
 
