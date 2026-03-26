@@ -142,8 +142,8 @@ create_DF <- function(dades){
 create_DF(dades_2$hourly)
 
 
-# --- GEOMETRIA -----------
-# -------------------------
+# -------- AFEGIR GEOMETRIA -----------
+# -------------------------------------
 
 
 
