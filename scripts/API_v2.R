@@ -181,7 +181,9 @@ st_write(punt_utm, "data/processed/punt.shp", delete_layer = TRUE)
 
 #  AFEGEIXO la GEOMETRIA 
 #  Com que CADA FILA és el MATEIX PUNT
+#  Cada fila TINDRÀ LA MATEIXA GEOMETRIA (el punt)
 
+#  REPETIR GEOMETRIA:
 #  FAIG funcio REP() = Repetir
 #  nrow() = PER CADA FILA
 
