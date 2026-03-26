@@ -142,14 +142,67 @@ create_DF <- function(dades){
 create_DF(dades_2$hourly)
 
 
-# -------- AFEGIR GEOMETRIA -----------
+# ---------- AFEGIR GEOMETRIA ---------
 # -------------------------------------
 
+#  Sistema de Referencia (CRS)
 
+#  La API de OPEN METEO usa 4326 = Lat/Long
+#  Jo vulla la projecció de Catalunya = 25831
+
+#    CRS	    Descripció
+#   4326	  lat/long (GPS)
+#   25831	 UTM zona 31N (Catalunya)
+
+
+#  EXEMPLE 01
+#  -----------
+
+#  Cero un punt INVENATAT
+#  Li poso de info nomes el nom
+#  Transformo el CRS a 25831
+#  I ho guardo a la carpeta PROCESSED com a SHAPE
 
 punt <- st_sfc(st_point(c(2.17, 41.38)), crs = 4326)
 punt_sf <- st_sf(nom = "Barcelona", geometry = punt)
-st_write(punt_sf, "data/processed/punt.shp")
+punt_utm <- st_transform(punt_sf, 25831)
+
+st_write(punt_utm, "data/processed/punt.shp", delete_layer = TRUE)
+
+
+
+#  EXEMPLE 02
+#  -----------
+
+
+#  CREO el DF amb la INFO de METEO
+#  CREO la GEOMETRIA
+#  Transformo el CRS a 25831
+
+#  AFEGEIXO la GEOMETRIA 
+#  Com que CADA FILA és el MATEIX PUNT
+
+#  FAIG funcio REP() = Repetir
+#  nrow() = PER CADA FILA
+
+#  I ho guardo a la carpeta PROCESSED com a SHAPE
+
+
+
+df_meteo <- create_DF(dades_2$hourly)
+
+geom <- st_sfc(st_point(c(2.17, 41.38)),crs = 4326) %>%
+    st_transform(25831)
+
+df_meteo_geom <- st_sf(
+  df_meteo,
+  geometry = rep(geom, nrow(df))
+)
+
+st_write(df_meteo_geom, "data/processed/meteo_v1.shp", delete_layer = TRUE)
+
+
+
 
 
 
