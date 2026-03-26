@@ -1,6 +1,6 @@
 # install.packages("httr")
 # install.packages("jsonlite")
-
+library(sf)
 library(httr)
 library(jsonlite)
 library(tidyverse)
@@ -142,8 +142,14 @@ create_DF <- function(dades){
 create_DF(dades_2$hourly)
 
 
+# --- GEOMETRIA -----------
+# -------------------------
 
 
+
+punt <- st_sfc(st_point(c(2.17, 41.38)), crs = 4326)
+punt_sf <- st_sf(nom = "Barcelona", geometry = punt)
+st_write(punt_sf, "data/processed/punt.shp")
 
 
 
