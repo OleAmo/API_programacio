@@ -1,0 +1,232 @@
+# install.packages("httr")
+# install.packages("jsonlite")
+library(sf)
+library(httr)
+library(jsonlite)
+library(tidyverse)
+
+
+#  --- OBTENCIÓ DADES DIFERENTS PUNTS -----
+#  ---------------------------------------
+
+#    -) Venen de la API OPEN METEO
+#    -) Les usaré per practicar
+
+#    -) Creo FUNCIÓ que INTRODUINT LAT, LONG, DATA 1 i DATA 2
+#    -) Ens dongui diferents DATA SETS
+
+
+dades_API <- function(lat,long,date_1,date_2){
+  
+  res_2 <- GET(
+    "https://archive-api.open-meteo.com/v1/archive",
+    query = list(
+      latitude = lat,
+      longitude = long,
+      start_date = date_1,
+      end_date = date_2,
+      hourly = "temperature_2m,relative_humidity_2m,windspeed_10m"
+    )
+  )  
+  
+  text_2 <- content(res_2, "text")
+  dades_2 <- fromJSON(text_2)
+  
+  return(dades_2)
+
+}
+
+
+dades_2 <- dades_API(41.38,2.17,"2024-03-01","2024-03-03")
+
+str(dades_2)
+
+
+# --- FUNCIONS BÀSIQUES ----
+# --------------------------
+
+#   CALCUL ESTADÍSTICS
+
+#   -) Max, Min = Temp, Humitat, Vent
+#   -) Ho calcula PER DIA
+
+
+calcul_dades <- function(dades){
+  max1 <- max(dades[1:24,])
+  max2 <- max(dades[25:48,])
+  max3 <- max(dades[49:72,])
+  
+  min1 <- min(dades[1:24,])
+  min2 <- min(dades[25:48,])
+  min3 <- min(dades[49:72,])
+  
+  text_max <- paste0(max1,' - ',max2,' - ',max3)
+  text_min <- paste0(min1,' - ',min2,' - ',min3)
+  
+  return(list(
+    max1 = max1,
+    max2 = max2,
+    max3 = max3,
+    min1 = min1,
+    min2 = min2,
+    min3 = min3,
+    text_max = text_max,
+    text_min = text_min
+  ))
+}
+
+#   CALCUL DIES
+
+#   -) Calcula el DIA màxim
+#   -) Calcula el DIA mínim
+
+
+calcul_dies <- function(df){
+  
+
+  dia_v1 <- data.frame(df[1])
+  
+  dia1 <- dia_v1[1,]
+  dia2 <- dia_v1[25,]
+  dia3 <- dia_v1[49,]
+  
+  dia1_f <- str_split_1(dia1, "T")[1]
+  dia2_f <- str_split_1(dia2, "T")[1]
+  dia3_f <- str_split_1(dia3, "T")[1]
+  
+
+  return(list(
+    dia_1 = dia1_f,
+    dia_2 = dia2_f,
+    dia_3 = dia3_f
+    
+  ))
+  
+}
+
+
+
+
+#  FUNCIO 01 = DADES a DATAFRAME
+#  ----------------------------
+
+#   -) Puc saver la Màxima i Minimna x dia
+#   -) Dades a sabeR (Temp, Humitat, Vent, Dia, Latitud)
+
+#   -) Creo un DATA FRAME amb la info
+#   -) La info la associo a PUNTS (x,y)
+#   -) La podré representar després a QGIS
+
+
+
+create_DF <- function(dades){
+  
+  df <- data.frame(dades)
+  
+  t <- df[2]
+  hum <- df[3]
+  w <- df[4]
+  
+  dia <- calcul_dies(df)
+  t_dades <- calcul_dades(t)
+  hum_dades <- calcul_dades(hum)
+  w_dades <- calcul_dades(w)
+  
+ 
+  resultat <- data.frame(
+    Dies = c(dia$dia_1,dia$dia_2,dia$dia_3),
+    T_max = c(t_dades$max1,t_dades$max2,t_dades$max3),
+    T_min = c(t_dades$min1,t_dades$min2,t_dades$min3),
+    Hum_max = c(hum_dades$max1,hum_dades$max2,hum_dades$max3),
+    Hum_min = c(hum_dades$min1,hum_dades$min2,hum_dades$min3),
+    Win_max = c(w_dades$max1,w_dades$max2,w_dades$max3),
+    Win_min = c(w_dades$min1,w_dades$min2,w_dades$min3)
+    
+  )
+  
+  
+  return(resultat)
+  
+  
+}
+
+
+create_DF(dades_2$hourly)
+
+
+# ---------- AFEGIR GEOMETRIA ---------
+# -------------------------------------
+
+#  Sistema de Referencia (CRS)
+
+#  La API de OPEN METEO usa 4326 = Lat/Long
+#  Jo vulla la projecció de Catalunya = 25831
+
+#    CRS	    Descripció
+#   4326	  lat/long (GPS)
+#   25831	 UTM zona 31N (Catalunya)
+
+
+#  EXEMPLE 01
+#  -----------
+
+#  Cero un punt INVENATAT
+#  Li poso de info nomes el nom
+#  Transformo el CRS a 25831
+#  I ho guardo a la carpeta PROCESSED com a SHAPE
+
+punt <- st_sfc(st_point(c(2.17, 41.38)), crs = 4326)
+punt_sf <- st_sf(nom = "Barcelona", geometry = punt)
+punt_utm <- st_transform(punt_sf, 25831)
+
+st_write(punt_utm, "data/processed/punt.shp", delete_layer = TRUE)
+
+
+
+#  EXEMPLE 02 -- GEOMETRIA ---
+#  ---------------------------
+
+
+#  CREO el DF amb la INFO de METEO
+#  CREO la GEOMETRIA
+#  Transformo el CRS a 25831
+
+#  AFEGEIXO la GEOMETRIA 
+#  Com que CADA FILA és el MATEIX PUNT
+#  Cada fila TINDRÀ LA MATEIXA GEOMETRIA (el punt)
+
+#  REPETIR GEOMETRIA:
+#  FAIG funcio REP() = Repetir
+#  nrow() = PER CADA FILA
+
+#  I ho guardo a la carpeta PROCESSED com a SHAPE
+
+
+
+df_meteo <- create_DF(dades_2$hourly)
+
+geom <- st_sfc(st_point(c(2.17, 41.38)),crs = 4326) %>%
+    st_transform(25831)
+
+df_meteo_geom <- st_sf(
+  df_meteo,
+  geometry = rep(geom, nrow(df_meteo))
+)
+
+st_write(df_meteo_geom, "data/processed/meteo_v1.shp", delete_layer = TRUE)
+
+
+
+
+
+
+#  EXERCICI 99999 = DADES
+#  -----------------
+
+#   -) Buscar INFO de DIVERSES LOCALITZACIONS
+#   -) Calcular de cada una si en una SETMANA la TºC puja o no
+#   -) Ho assoccio a un poligon de MUNICIPI
+#   -) Li donc escala de color
+#   -) Ho represento
+
+
