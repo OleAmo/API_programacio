@@ -171,8 +171,8 @@ st_write(punt_utm, "data/processed/punt.shp", delete_layer = TRUE)
 
 
 
-#  EXEMPLE 02
-#  -----------
+#  EXEMPLE 02 -- GEOMETRIA ---
+#  ---------------------------
 
 
 #  CREO el DF amb la INFO de METEO
@@ -198,11 +198,10 @@ geom <- st_sfc(st_point(c(2.17, 41.38)),crs = 4326) %>%
 
 df_meteo_geom <- st_sf(
   df_meteo,
-  geometry = rep(geom, nrow(df))
+  geometry = rep(geom, nrow(df_meteo))
 )
 
 st_write(df_meteo_geom, "data/processed/meteo_v1.shp", delete_layer = TRUE)
-
 
 
 
