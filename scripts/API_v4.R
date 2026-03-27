@@ -272,11 +272,32 @@ long/num
 
 
 
+calcul_dades_MULTIPLE <- function(dades){
+  
+  # he d'aconseguir una funció que el RETURN sigui una llista variable
+  # Si les dades son de 3 dies ha de retornar 3 max, 3 min ...
+  # Si les dades son de 44 dies ha de retornar 44 max, 44 min ...
+  
+ 
+  
+  resultat <- list()
+  
+  resultat$val_1 <- 23
+  resultat$val_2 <- 444
+  resultat$val_3 <- 5523
+
+  
+  
+  return(resultat)
+}
+
+exemple <-calcul_dades_MULTIPLE (22)
+
+exemple$val_1
 
 
 
-
-#  EXERCICI 99999 = DADES
+  #  EXERCICI 99999 = DADES
 #  -----------------
 
 #   -) Buscar INFO de DIVERSES LOCALITZACIONS
