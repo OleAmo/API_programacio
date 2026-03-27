@@ -208,13 +208,5 @@ st_write(df_meteo_geom, "data/processed/meteo_v1.shp", delete_layer = TRUE)
 
 
 
-#  EXERCICI 99999 = DADES
-#  -----------------
-
-#   -) Buscar INFO de DIVERSES LOCALITZACIONS
-#   -) Calcular de cada una si en una SETMANA la TºC puja o no
-#   -) Ho assoccio a un poligon de MUNICIPI
-#   -) Li donc escala de color
-#   -) Ho represento
 
 

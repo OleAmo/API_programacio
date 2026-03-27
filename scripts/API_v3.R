@@ -6,8 +6,10 @@ library(jsonlite)
 library(tidyverse)
 
 
-#  --- OBTENCIÓ DADES DIFERENTS PUNTS -----
+#  ------- FUNCIÓ 01 = DADES API ---------
 #  ---------------------------------------
+
+#    -) OBTENCIÓ DADES DIFERENTS PUNTS
 
 #    -) Venen de la API OPEN METEO
 #    -) Les usaré per practicar
@@ -42,10 +44,8 @@ dades_2 <- dades_API(41.38,2.17,"2024-03-01","2024-03-03")
 str(dades_2)
 
 
-# --- FUNCIONS BÀSIQUES ----
-# --------------------------
-
-#   CALCUL ESTADÍSTICS
+#  ------- FUNCIÓ 02 = CALCUL ESTADÍSTICS ---------
+#  ------------------------------------------------
 
 #   -) Max, Min = Temp, Humitat, Vent
 #   -) Ho calcula PER DIA
@@ -75,7 +75,8 @@ calcul_dades <- function(dades){
   ))
 }
 
-#   CALCUL DIES
+#  ------- FUNCIÓ 03 = CALCUL DIES ---------
+#  -----------------------------------------
 
 #   -) Calcula el DIA màxim
 #   -) Calcula el DIA mínim
@@ -105,10 +106,9 @@ calcul_dies <- function(df){
 }
 
 
+#  ------- FUNCIÓ 04 = CADADES a DATAFRAME ---------
+#  -------------------------------------------------
 
-
-#  FUNCIO 01 = DADES a DATAFRAME
-#  ----------------------------
 
 #   -) Puc saver la Màxima i Minimna x dia
 #   -) Dades a sabeR (Temp, Humitat, Vent, Dia, Latitud)
@@ -154,41 +154,12 @@ create_DF <- function(dades){
 create_DF(dades_2$hourly)
 
 
-# ---------- AFEGIR GEOMETRIA ---------
-# -------------------------------------
-
-#  Sistema de Referencia (CRS)
-
-#  La API de OPEN METEO usa 4326 = Lat/Long
-#  Jo vulla la projecció de Catalunya = 25831
-
-#    CRS	    Descripció
-#   4326	  lat/long (GPS)
-#   25831	 UTM zona 31N (Catalunya)
+#  ------- FUNCIÓ 05 = ASSIGNAR GEOMETRIA ---------
+#  -------------------------------------------------
 
 
-#  EXEMPLE 01
-#  -----------
-
-#  Cero un punt INVENATAT
-#  Li poso de info nomes el nom
-#  Transformo el CRS a 25831
-#  I ho guardo a la carpeta PROCESSED com a SHAPE
-
-punt <- st_sfc(st_point(c(2.17, 41.38)), crs = 4326)
-punt_sf <- st_sf(nom = "Barcelona", geometry = punt)
-punt_utm <- st_transform(punt_sf, 25831)
-
-st_write(punt_utm, "data/processed/punt.shp", delete_layer = TRUE)
-
-
-
-#  EXEMPLE 02 -- GEOMETRIA ---
-#  ---------------------------
-
-
-#  CREO el DF amb la INFO de METEO
-#  CREO la GEOMETRIA
+#  CREO FUNCIÓ PER ASSIGNAR GEOMETRIAO
+#  CREO Columna GEOMETRIA
 #  Transformo el CRS a 25831
 
 #  AFEGEIXO la GEOMETRIA 
@@ -202,20 +173,74 @@ st_write(punt_utm, "data/processed/punt.shp", delete_layer = TRUE)
 #  I ho guardo a la carpeta PROCESSED com a SHAPE
 
 
-
-df_meteo <- create_DF(dades_2$hourly)
-
-geom <- st_sfc(st_point(c(2.17, 41.38)),crs = 4326) %>%
+assign_Geom <- function(dades,long,lat){
+  
+  geom <- st_sfc(st_point(c(long, lat)),crs = 4326) %>%
     st_transform(25831)
+  
+  df_meteo_geom <- st_sf(
+    dades ,
+    geometry = rep(geom, nrow(dades))
+  )
+  
+  return(df_meteo_geom)
+  
+}
 
-df_meteo_geom <- st_sf(
-  df_meteo,
-  geometry = rep(geom, nrow(df_meteo))
-)
 
-st_write(df_meteo_geom, "data/processed/meteo_v1.shp", delete_layer = TRUE)
+#  ------- FUNCIÓ 06 = AUTOMATIZACIÓ FINAL ---------
+#  -------------------------------------------------
 
 
+#  NOMÉS amb LAT, LONG, DIA 1 i DIA 2
+#  TINC EL DF FINAL amb GOEMETRIA
+#  PUC FER UNA FUNCIÓ QUE HO ENGLOBI
+
+
+
+create_DF_GEOM <- function(lat,long,data_1,data_2){
+  
+  dades_api <- dades_API(lat,long,data_1,data_2)
+  
+  dades_api_processed <- create_DF(dades_api$hourly)
+  
+  dades_api_processed_geom <- assign_Geom(dades_api_processed,long,lat)
+  
+  return(dades_api_processed_geom)
+  
+}
+
+
+#  ------- OBTENCIÓ DADES DIFERENTS PUNTS ---------
+#  -------------------------------------------------
+
+
+#  NOMÉS amb LAT, LONG, DIA 1 i DIA 2
+#  PUC TENIR DF amb GEOMETRIA
+
+DF_FINAL <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-03")
+DF_FINAL
+
+
+# BCN = 41.3927674  2.0577875
+# GIRONA = 41.9803704  2.7774675
+# LLEIDA = 41.6183991 0.5787351
+# TARRAGONA =  41.1258621 1.1973837
+
+
+DF_BCN <- create_DF_GEOM(41.3927674,2.0577875,"2024-03-01","2024-03-03")
+DF_GIRONA <- create_DF_GEOM(41.9803704,2.7774675,"2024-03-01","2024-03-03")
+DF_LLEIDA <- create_DF_GEOM(41.6183991, 0.5787351,"2024-03-01","2024-03-03")
+DF_TARRAGONA <- create_DF_GEOM(41.1258621, 1.1973837,"2024-03-01","2024-03-03")
+
+
+# Ho GUARDO com a SHAPE
+
+
+st_write(DF_BCN, "data/processed/BCN_v1.shp", delete_layer = TRUE)
+st_write(DF_GIRONA, "data/processed/GIRONA_v1.shp", delete_layer = TRUE)
+st_write(DF_LLEIDA, "data/processed/LLEIDA_v1.shp", delete_layer = TRUE)
+st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 
 
 
