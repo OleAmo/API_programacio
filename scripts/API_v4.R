@@ -257,6 +257,32 @@ st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 #    EN FUNCIÓ D'AIXO FAREM DIFERNTS CALCULS
 
 
+
+calcul_dades_MULTIPLE <- function(dades,dia_1,dia_2){
+  
+  
+  
+  # he d'aconseguir una funció que el RETURN sigui una llista variable
+  # Si les dades son de 3 dies ha de retornar 3 max, 3 min ...
+  # Si les dades son de 44 dies ha de retornar 44 max, 44 min ...
+  
+ 
+
+  
+  
+  return(df)
+}
+
+exemple <-calcul_dades_MULTIPLE()
+
+exemple
+
+
+
+
+# ------- PROVA DE LA FUNCIÓ  ------------
+# ----------------------------------------
+
 dades <- dades_2$hourly$temperature_2m
 
 dia_1 <- as.Date("2024-03-01")
@@ -264,36 +290,68 @@ dia_2 <- as.Date("2024-03-03")
 num <- as.integer(dia_2-dia_1)+1
 num
 
-long <- length(dades)
+long_hores <- length(dades)  
 
 long/num
 
+# --------- FUNCIO CORRECTE ----------
+# ------------------------------------
 
 
+t_max <- c()
 
+a = 1
+b = a + 23
+print(a)
+print(b)
 
-calcul_dades_MULTIPLE <- function(dades){
-  
-  # he d'aconseguir una funció que el RETURN sigui una llista variable
-  # Si les dades son de 3 dies ha de retornar 3 max, 3 min ...
-  # Si les dades son de 44 dies ha de retornar 44 max, 44 min ...
-  
- 
-  
-  resultat <- list()
-  
-  resultat$val_1 <- 23
-  resultat$val_2 <- 444
-  resultat$val_3 <- 5523
+t_max <- c(t_max,max(dades[a:b]))
 
-  
-  
-  return(resultat)
+for (i in 1:(num-1)){
+  a <- b + 1
+  b <- b + 24
+  t_max <- c(t_max,max(dades[a:b]))
 }
 
-exemple <-calcul_dades_MULTIPLE (22)
+t_max
 
-exemple$val_1
+
+
+# -------------------------
+# ----------------------------
+
+
+
+
+
+# max1 <- max(dades[1:24,])   # dins de la funció es posa [1:24,]
+# max2 <- max(dades[25:48,])
+# max3 <- max(dades[49:72,])
+# max4 <- max(dades[73:96,])
+
+min1 <- min(dades[1:24,])
+min2 <- min(dades[25:48,])
+min3 <- min(dades[49:72,])
+
+
+
+resultat <- list()
+
+resultat$val_1 <- 23
+resultat$val_2 <- 444
+resultat$val_3 <- 5523
+
+df <- data.frame(
+  dia = c("23-abri","24-abril","25-abril"),
+  t_max = c(45,56,48),
+  t_min = c(21,28,23)
+)
+
+
+
+
+
+
 
 
 
