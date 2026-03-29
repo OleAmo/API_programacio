@@ -298,25 +298,54 @@ long_hores/num
 # ------------------------------------
 
 
-t_max <- c()
-t_min <- c()
+dades_temp <- dades_2$hourly$temperature_2m
+dades_hum <- dades_2$hourly$relative_humidity_2m
+dades_win <- dades_2$hourly$windspeed_10m
 
-a = 1
-b = a + 23
-print(paste(a,' - ',b))
-
-
-t_max <- c(t_max,max(dades[a:b]))
-
-for (i in 1:(num-1)){
-  a <- b + 1
-  b <- b + 24
-  t_max <- c(t_max,max(dades[a:b]))
-  t_min <- c(t_min,min(dades[a:b]))
+dades_create <- function(df,dia_Inici,dia_Final){
+  
+  dia_1 <- as.Date(dia_Inici)
+  dia_2 <- as.Date(dia_Final)
+  num <- as.integer(dia_2-dia_1)+1
+  num
+  
+  max <- c()
+  min <- c()
+  a = 1
+  b = a + 23
   print(paste(a,' - ',b))
+  
+  max <- c(max,max(df[a:b]))
+  min <- c(min,min(df[a:b]))
+  
+  for (i in 1:(num-1)){
+    a <- b + 1
+    b <- b + 24
+    max <- c(max,max(df[a:b]))
+    min <- c(min,min(df[a:b]))
+    print(paste(a,' - ',b))
+  }
+  
+  return(list(
+    max = max,
+    min = min
+      ))
+  
 }
 
-t_max
+
+
+
+
+
+
+dades_create(dades_temp,"2024-03-01","2024-03-03")
+dades_create(dades_hum,"2024-03-01","2024-03-03")
+dades_create(dades_win,"2024-03-01","2024-03-03")
+
+
+create_DF(dades_2$hourly)
+
 t_min
 
 
