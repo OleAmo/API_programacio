@@ -292,18 +292,19 @@ num
 
 long_hores <- length(dades)  
 
-long/num
+long_hores/num
 
 # --------- FUNCIO CORRECTE ----------
 # ------------------------------------
 
 
 t_max <- c()
+t_min <- c()
 
 a = 1
 b = a + 23
-print(a)
-print(b)
+print(paste(a,' - ',b))
+
 
 t_max <- c(t_max,max(dades[a:b]))
 
@@ -311,9 +312,12 @@ for (i in 1:(num-1)){
   a <- b + 1
   b <- b + 24
   t_max <- c(t_max,max(dades[a:b]))
+  t_min <- c(t_min,min(dades[a:b]))
+  print(paste(a,' - ',b))
 }
 
 t_max
+t_min
 
 
 
