@@ -260,11 +260,9 @@ st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 #    EN FUNCIÓ D'AIXO FAREM DIFERNTS CALCULS
 
 
-dades_temp <- dades_2$hourly$temperature_2m
-dades_hum <- dades_2$hourly$relative_humidity_2m
-dades_win <- dades_2$hourly$windspeed_10m
-
 dades_create <- function(df,dia_Inici,dia_Final){
+  
+  df <- data.frame(df)
   
   dia_1 <- as.Date(dia_Inici)
   dia_2 <- as.Date(dia_Final)
@@ -275,17 +273,15 @@ dades_create <- function(df,dia_Inici,dia_Final){
   min <- c()
   a = 1
   b = a + 23
-  print(paste(a,' - ',b))
   
-  max <- c(max,max(df[a:b]))
-  min <- c(min,min(df[a:b]))
+  max <- c(max,max(df[a:b,]))
+  min <- c(min,min(df[a:b,]))
   
   for (i in 1:(num-1)){
     a <- b + 1
     b <- b + 24
-    max <- c(max,max(df[a:b]))
-    min <- c(min,min(df[a:b]))
-    print(paste(a,' - ',b))
+    max <- c(max,max(df[a:b,]))
+    min <- c(min,min(df[a:b,]))
   }
   
   return(list(
@@ -295,7 +291,9 @@ dades_create <- function(df,dia_Inici,dia_Final){
   
 }
 
-
+dades_temp <- dades_2$hourly[2]
+dades_hum <- dades_2$hourly[3]
+dades_win <- dades_2$hourly[4]
 
 dades_create(dades_temp,"2024-03-01","2024-03-03")
 dades_create(dades_hum,"2024-03-01","2024-03-03")
@@ -311,8 +309,6 @@ create_DF(dades_2$hourly)
 
 #   -) Creo una funció que depengui del numero de dies
 #   -) En funció de dies em crei un VECTOR del 1r a l'ultim dia
-
-
 
 
 
@@ -355,6 +351,60 @@ dies_create(dades_2$hourly,"2024-03-01","2024-03-03")
   
 
   
+
+# ----------- CREACIÓ DATA FRAME en f(x) DIES ----------
+# -------------------------------------------------------
+
+#   -) Creo una funció que depengui del numero de dies
+#   -) En funció de dies crearà un DATA FRAME
+#   -) El data FRAME tindrà 7 files
+#   -) DIES, Temp_max, Temp_min,...
+#   -) I les columnes seran depenent del Num de dies
+
+#   -) Dins seu té 2 FUNCIONS que ja gestionen les dades en f(x) dels dies:
+
+#        -) dies_create
+#        -) dades_create
+
+
+
+
+
+DF_create <- function(dades,dia_Inici,dia_Final){
+  
+  df <- data.frame(dades)
+  
+  t <- df[2]
+  hum <- df[3]
+  w <- df[4]
+  
+  dies <- dies_create(df,dia_Inici,dia_Final)
+  
+  t_dades <- dades_create(t,dia_Inici,dia_Final)
+  hum_dades <- dades_create(hum,dia_Inici,dia_Final)
+  w_dades <- dades_create(w,dia_Inici,dia_Final)
+  
+  
+  resultat <- data.frame(
+    Dies = dies,
+    T_max = t_dades$max,
+    T_min = t_dades$min,
+    Hum_max = hum_dades$max,
+    Hum_min = hum_dades$min,
+    Win_max = w_dades$max,
+    Win_min = w_dades$min
+    
+  )
+  
+  
+  return(resultat)
+  
+  
+}
+
+
+DF_create(dades_2$hourly,"2024-03-01","2024-03-03")
+
 
 
 
