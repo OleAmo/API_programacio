@@ -240,62 +240,18 @@ st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 
 
 
+# --------- FUNCIO DADES en f(x) DIES ----------
+# ----------------------------------------------
 
-#  ------- NO SE COM FER HO ---------
-#  ----------------------------------
-
-#   -) Max, Min = Temp, Humitat, Vent
-#   -) Ho calcula PER DIA
-
-#   -) Vull implementar que en funció del numero de dies
-#   -) Calcularà més o menys valors
+#   -) Creo una funció que depengui del numero de dies
+#   -) En funció del Nº Dies Calcularà:
+#   -) més o menys valors de Max, Min = Temp, Humitat, Vent
 
 #   -) Ex: si les dades de la API son de 5 dies = ha d'haver 5 max, min,...
 #   -) Ex: si les dades de la API son de 47 dies = ha d'haver 47 max, min,...
 
 #    la funcio CALCUL DE DADE (DADES, DIES) HA DE SABER QUANS DIES TTINC
 #    EN FUNCIÓ D'AIXO FAREM DIFERNTS CALCULS
-
-
-
-calcul_dades_MULTIPLE <- function(dades,dia_1,dia_2){
-  
-  
-  
-  # he d'aconseguir una funció que el RETURN sigui una llista variable
-  # Si les dades son de 3 dies ha de retornar 3 max, 3 min ...
-  # Si les dades son de 44 dies ha de retornar 44 max, 44 min ...
-  
- 
-
-  
-  
-  return(df)
-}
-
-exemple <-calcul_dades_MULTIPLE()
-
-exemple
-
-
-
-
-# ------- PROVA DE LA FUNCIÓ  ------------
-# ----------------------------------------
-
-dades <- dades_2$hourly$temperature_2m
-
-dia_1 <- as.Date("2024-03-01")
-dia_2 <- as.Date("2024-03-03")
-num <- as.integer(dia_2-dia_1)+1
-num
-
-long_hores <- length(dades)  
-
-long_hores/num
-
-# --------- FUNCIO CORRECTE ----------
-# ------------------------------------
 
 
 dades_temp <- dades_2$hourly$temperature_2m
@@ -335,10 +291,6 @@ dades_create <- function(df,dia_Inici,dia_Final){
 
 
 
-
-
-
-
 dades_create(dades_temp,"2024-03-01","2024-03-03")
 dades_create(dades_hum,"2024-03-01","2024-03-03")
 dades_create(dades_win,"2024-03-01","2024-03-03")
@@ -346,49 +298,18 @@ dades_create(dades_win,"2024-03-01","2024-03-03")
 
 create_DF(dades_2$hourly)
 
-t_min
 
 
 
-# -------------------------
+
+# ----------------------------
 # ----------------------------
 
 
 
 
 
-# max1 <- max(dades[1:24,])   # dins de la funció es posa [1:24,]
-# max2 <- max(dades[25:48,])
-# max3 <- max(dades[49:72,])
-# max4 <- max(dades[73:96,])
-
-min1 <- min(dades[1:24,])
-min2 <- min(dades[25:48,])
-min3 <- min(dades[49:72,])
-
-
-
-resultat <- list()
-
-resultat$val_1 <- 23
-resultat$val_2 <- 444
-resultat$val_3 <- 5523
-
-df <- data.frame(
-  dia = c("23-abri","24-abril","25-abril"),
-  t_max = c(45,56,48),
-  t_min = c(21,28,23)
-)
-
-
-
-
-
-
-
-
-
-  #  EXERCICI 99999 = DADES
+#  EXERCICI 99999 = DADES
 #  -----------------
 
 #   -) Buscar INFO de DIVERSES LOCALITZACIONS
