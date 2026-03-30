@@ -262,7 +262,7 @@ create_DF_GEOM <- function(lat,long,data_1,data_2){
 #  NOMÉS amb LAT, LONG, DIA 1 i DIA 2
 #  PUC TENIR DF amb GEOMETRIA
 
-DF_FINAL <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-03")
+DF_FINAL <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-08")
 DF_FINAL
 
 
