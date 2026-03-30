@@ -240,8 +240,14 @@ st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 
 
 
-# --------- FUNCIO DADES en f(x) DIES ----------
-# ----------------------------------------------
+# *******************************************************
+# ****************    MILLORAR FUNCIONS   ***************
+# *******************************************************
+
+
+
+# --------- CREACIÓ DADES en f(x) DIES ----------
+# ------------------------------------------------
 
 #   -) Creo una funció que depengui del numero de dies
 #   -) En funció del Nº Dies Calcularà:
@@ -297,6 +303,15 @@ dades_create(dades_win,"2024-03-01","2024-03-03")
 
 
 create_DF(dades_2$hourly)
+
+
+
+# ----------- CREACIÓ DIES en f(x) DIES ----------
+# ------------------------------------------------
+
+#   -) Creo una funció que depengui del numero de dies
+#   -) En funció de dies em crei un VECTOR del 1r a l'ultim dia
+
 
 
 
