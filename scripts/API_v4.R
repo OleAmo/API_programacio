@@ -316,11 +316,45 @@ create_DF(dades_2$hourly)
 
 
 
+dies_create <- function(df,dia_Inici,dia_Final){
+  
+  df <- data.frame(df[1])
+  
+  
+  dia_1 <- as.Date(dia_Inici)
+  dia_2 <- as.Date(dia_Final)
+  num <- as.integer(dia_2-dia_1)+1
+  num
+  
+  dies <- c()
+  a = 1
+  b = a + 23
+  
+  dia_max <- max(df[a:b,]) 
+  dia_max <- str_split_1(dia_max, "T")[1]
+  
+  dies <- c(dies,dia_max)
+  
+  
+  for (i in 1:(num-1)){
+    a <- b + 1
+    b <- b + 24
+    
+    dia_max <- max(df[a:b,])
+    dia_max <- str_split_1(dia_max, "T")[1]
+    
+    dies <- c(dies,dia_max)
+  }
+  
+  return(dies)
+  
+}
 
-# ----------------------------
-# ----------------------------
 
+dies_create(dades_2$hourly,"2024-03-01","2024-03-03")
+  
 
+  
 
 
 
