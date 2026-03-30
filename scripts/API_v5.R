@@ -231,6 +231,9 @@ assign_Geom <- function(dades,long,lat){
   
 }
 
+dades <- DF_create(dades_2$hourly,"2024-03-01","2024-03-03")
+
+assign_Geom(dades,41.38,2.17)
 
 #  ------- FUNCIÓ 06 = AUTOMATIZACIÓ FINAL ---------
 #  -------------------------------------------------
@@ -246,7 +249,7 @@ create_DF_GEOM <- function(lat,long,data_1,data_2){
   
   dades_api <- dades_API(lat,long,data_1,data_2)
   
-  dades_api_processed <- create_DF(dades_api$hourly)
+  dades_api_processed <- DF_create(dades_api$hourly,data_1,data_2)
   
   dades_api_processed_geom <- assign_Geom(dades_api_processed,long,lat)
   
@@ -262,7 +265,7 @@ create_DF_GEOM <- function(lat,long,data_1,data_2){
 #  NOMÉS amb LAT, LONG, DIA 1 i DIA 2
 #  PUC TENIR DF amb GEOMETRIA
 
-DF_FINAL <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-08")
+DF_FINAL <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-28")
 DF_FINAL
 
 
@@ -272,10 +275,12 @@ DF_FINAL
 # TARRAGONA =  41.1258621 1.1973837
 
 
-DF_BCN <- create_DF_GEOM(41.3927674,2.0577875,"2024-03-01","2024-03-03")
-DF_GIRONA <- create_DF_GEOM(41.9803704,2.7774675,"2024-03-01","2024-03-03")
-DF_LLEIDA <- create_DF_GEOM(41.6183991, 0.5787351,"2024-03-01","2024-03-03")
-DF_TARRAGONA <- create_DF_GEOM(41.1258621, 1.1973837,"2024-03-01","2024-03-03")
+
+
+DF_BCN <- create_DF_GEOM(41.3927674,2.0577875,"2024-03-01","2024-03-28")
+DF_GIRONA <- create_DF_GEOM(41.9803704,2.7774675,"2024-03-01","2024-03-28")
+DF_LLEIDA <- create_DF_GEOM(41.6183991, 0.5787351,"2024-03-01","2024-03-28")
+DF_TARRAGONA <- create_DF_GEOM(41.1258621, 1.1973837,"2024-03-01","2024-03-23")
 
 
 # Ho GUARDO com a SHAPE
@@ -285,6 +290,13 @@ st_write(DF_BCN, "data/processed/BCN_v1.shp", delete_layer = TRUE)
 st_write(DF_GIRONA, "data/processed/GIRONA_v1.shp", delete_layer = TRUE)
 st_write(DF_LLEIDA, "data/processed/LLEIDA_v1.shp", delete_layer = TRUE)
 st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
+
+
+
+
+
+
+
 
 
 
