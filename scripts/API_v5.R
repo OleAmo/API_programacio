@@ -386,10 +386,10 @@ TARRAGONES <- create_coords(comarques,'Tarragonès')
 SEGRIA <- create_coords(comarques,'Segrià')
 
 
-DF_BCNES <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-28")
-DF_GIRONES <- create_DF_GEOM(GIRONES$long,GIRONES$lat,"2024-03-01","2024-03-28")
-DF_SEGRIA <- create_DF_GEOM(SEGRIA$long, SEGRIA$lat,"2024-03-01","2024-03-28")
-DF_TARRAGONA <- create_DF_GEOM(TARRAGONES$long, TARRAGONES$lat,"2024-03-01","2024-03-28")
+DF_BCNES <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-01")
+DF_GIRONES <- create_DF_GEOM(GIRONES$long,GIRONES$lat,"2024-03-01","2024-03-01")
+DF_SEGRIA <- create_DF_GEOM(SEGRIA$long, SEGRIA$lat,"2024-03-01","2024-03-01")
+DF_TARRAGONA <- create_DF_GEOM(TARRAGONES$long, TARRAGONES$lat,"2024-03-01","2024-03-01")
 
 
 # UNIR SHAPES: 
