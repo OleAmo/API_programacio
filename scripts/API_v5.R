@@ -75,11 +75,20 @@ dades_create <- function(df,dia_Inici,dia_Final){
   max <- c(max,max(df[a:b,]))
   min <- c(min,min(df[a:b,]))
   
-  for (i in 1:(num-1)){
-    a <- b + 1
-    b <- b + 24
-    max <- c(max,max(df[a:b,]))
-    min <- c(min,min(df[a:b,]))
+  
+  if (dia_Inici==dia_Final){    # evito el error de processar Data Inicial = Data final
+    max <- max
+    min <- min
+    
+  } else {
+    
+      for (i in 1:(num-1)){
+        a <- b + 1
+        b <- b + 24
+        max <- c(max,max(df[a:b,]))
+        min <- c(min,min(df[a:b,]))
+      }
+    
   }
   
   return(list(
@@ -108,32 +117,40 @@ dades_create(dades_win,"2024-03-01","2024-03-03")
 
 dies_create <- function(df,dia_Inici,dia_Final){
   
-  df <- data.frame(df[1])
-  
-  
-  dia_1 <- as.Date(dia_Inici)
-  dia_2 <- as.Date(dia_Final)
-  num <- as.integer(dia_2-dia_1)+1
-  num
-  
-  dies <- c()
-  a = 1
-  b = a + 23
-  
-  dia_max <- max(df[a:b,]) 
-  dia_max <- str_split_1(dia_max, "T")[1]
-  
-  dies <- c(dies,dia_max)
-  
-  
-  for (i in 1:(num-1)){
-    a <- b + 1
-    b <- b + 24
+  if(dia_Inici == dia_Final){    # evito el error de processar DIA Inici = DIA Final
+    dies <- c()
+    dies <- c(dia_Inici)
     
-    dia_max <- max(df[a:b,])
-    dia_max <- str_split_1(dia_max, "T")[1]
-    
-    dies <- c(dies,dia_max)
+  } else {
+  
+      df <- data.frame(df[1])
+      
+      
+      dia_1 <- as.Date(dia_Inici)
+      dia_2 <- as.Date(dia_Final)
+      num <- as.integer(dia_2-dia_1)+1
+      num
+      
+      dies <- c()
+      a = 1
+      b = a + 23
+      
+      dia_max <- max(df[a:b,]) 
+      dia_max <- str_split_1(dia_max, "T")[1]
+      
+      dies <- c(dies,dia_max)
+      
+      
+      for (i in 1:(num-1)){
+        a <- b + 1
+        b <- b + 24
+        
+        dia_max <- max(df[a:b,])
+        dia_max <- str_split_1(dia_max, "T")[1]
+        
+        dies <- c(dies,dia_max)
+      }
+
   }
   
   return(dies)
@@ -265,9 +282,11 @@ create_DF_GEOM <- function(lat,long,data_1,data_2){
 #  NOMÉS amb LAT, LONG, DIA 1 i DIA 2
 #  PUC TENIR DF amb GEOMETRIA
 
-DF_FINAL <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-28")
-DF_FINAL
+DF_FINAL_8_dies <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-08")
+DF_FINAL_8_dies
 
+DF_FINAL_1_dia <- create_DF_GEOM(41.38,2.17,"2024-03-01","2024-03-01")
+DF_FINAL_1_dia
 
 # BCN = 41.3927674  2.0577875
 # GIRONA = 41.9803704  2.7774675
