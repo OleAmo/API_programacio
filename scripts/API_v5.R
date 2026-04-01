@@ -4,6 +4,9 @@ library(sf)
 library(httr)
 library(jsonlite)
 library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readr)
 
 
 #  ------- FUNCIÓ 01 = DADES API ---------
@@ -305,11 +308,24 @@ st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 
 
 
+# ----- COMARQUES CATALUNYA PROJECTE -------
+# ------------------------------------------
 
+# OBJECIU:
 
+# Calcular el centroide de cada comarca
+# Calculaar per UN DIA les dades de TEMP, HUMITAT,...
+# Visaulitzar-ho al QGIS
 
+# SHAHPE
 
+comarques <- st_read("data/raw/comarques.shp")
 
+comarques_centroide <-  comarques %>%
+  mutate(
+    centoride = st_centroid(geometry),
+    CRS =  
+  )
 
 
 
