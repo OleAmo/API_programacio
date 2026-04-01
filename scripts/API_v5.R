@@ -397,8 +397,8 @@ sf_total <- rbind(DF_BCNES,DF_GIRONES,DF_SEGRIA,DF_TARRAGONA)
 st_write(sf_total, "data/processed/COMARQUES_CAPITALS.shp", delete_layer = TRUE)
 
 
-# ------------ CREAR TOTES COMARQUES -----------
-# ----------------------------------------------
+# ------------ FUNCIÓ CREAR TOTES COMARQUES -----------
+# ------------------------------------------------------
 
 #     -) Crear TOTS CENTROIDES COMERQUES
 #     -) De cada CENTROID = Buscar al info de TEMP, HUMITAT,...
@@ -406,31 +406,41 @@ st_write(sf_total, "data/processed/COMARQUES_CAPITALS.shp", delete_layer = TRUE)
 #     -) Els UNEIXO en un SOL SHAPE
 
 
-BCNES <- create_coords(comarques,'Barcelonès')
-DF_BCNES <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-01")
-
-
-create_shape <- function(df,data_inici,data_final){
+create_shape <- function(dades,data_inici,data_final){
   
+  long <- length(dades$CODICOMAR) 
+  
+  llista <- list()
+  
+  for(i in 1:long){
+    
+    nom_comarca <- dades$NOMCOMAR[i]
+    coord_comarca <- create_coords(dades,nom_comarca)
+    comarca_DF_GEOM <- create_DF_GEOM(coord_comarca$long,coord_comarca$lat,data_inici,data_final) %>% 
+      mutate( nom_comarca = nom_comarca )
+    llista[[i]] <- comarca_DF_GEOM
+  }
+  
+  
+  comarques_DF_GEOM <- do.call(rbind, llista)
+  
+  return(comarques_DF_GEOM)
   
 }
 
-create_shape(comarques,"2024-03-01","2024-03-01")
 
-long <- length(comarques$CODICOMAR) 
+# ------------ CREAR SHAPE TOTES COMARQUES -----------
+# ----------------------------------------------------
 
-llista <- c()
+comarques_DF_GEOM <- create_shape(comarques,"2024-03-01","2024-03-01")
 
-for(i in 1:long){
-  
-  nom_comarca <- comarques$NOMCOMAR[i]
-  coord_comarca <- create_coords(comarques,nom_comarca)
-  comarca_DF_GEOM <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-01")
-  comarca_DF_GEOM %>% mutate( nom_comarca = nom_comarca )
-  sf_total <- rbind(sf_total, comarca_DF_GEOM)
-}
+st_write(comarques_DF_GEOM, "data/processed/COMARQUES_CENTROIDES.shp", delete_layer = TRUE)
 
-class(sf_total)
+
+
+
+
+
 
 
 
