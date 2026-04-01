@@ -42,11 +42,6 @@ dades_API <- function(lat,long,date_1,date_2){
 }
 
 
-dades_2 <- dades_API(41.38,2.17,"2024-03-01","2024-03-03")
-
-str(dades_2)
-
-
 # --------- CREACIÓ DADES en f(x) DIES ----------
 # ------------------------------------------------
 
@@ -101,14 +96,6 @@ dades_create <- function(df,dia_Inici,dia_Final){
   
 }
 
-dades_temp <- dades_2$hourly[2]
-dades_hum <- dades_2$hourly[3]
-dades_win <- dades_2$hourly[4]
-
-dades_create(dades_temp,"2024-03-01","2024-03-03")
-dades_create(dades_hum,"2024-03-01","2024-03-03")
-dades_create(dades_win,"2024-03-01","2024-03-03")
-
 
 # ----------- CREACIÓ DIES en f(x) DIES ----------
 # ------------------------------------------------
@@ -161,11 +148,6 @@ dies_create <- function(df,dia_Inici,dia_Final){
 }
 
 
-dies_create(dades_2$hourly,"2024-03-01","2024-03-03")
-
-
-
-
 # ----------- CREACIÓ DATA FRAME en f(x) DIES ----------
 # -------------------------------------------------------
 
@@ -214,9 +196,6 @@ DF_create <- function(dades,dia_Inici,dia_Final){
 }
 
 
-DF_create(dades_2$hourly,"2024-03-01","2024-03-03")
-
-
 
 #  ------- FUNCIÓ 05 = ASSIGNAR GEOMETRIA ---------
 #  -------------------------------------------------
@@ -251,9 +230,6 @@ assign_Geom <- function(dades,long,lat){
   
 }
 
-dades <- DF_create(dades_2$hourly,"2024-03-01","2024-03-03")
-
-assign_Geom(dades,41.38,2.17)
 
 #  ------- FUNCIÓ 06 = AUTOMATIZACIÓ FINAL ---------
 #  -------------------------------------------------
@@ -295,7 +271,7 @@ DF_FINAL_1_dia
 DF_BCN <- create_DF_GEOM(41.3927674,2.0577875,"2024-03-01","2024-03-28")
 DF_GIRONA <- create_DF_GEOM(41.9803704,2.7774675,"2024-03-01","2024-03-28")
 DF_LLEIDA <- create_DF_GEOM(41.6183991, 0.5787351,"2024-03-01","2024-03-28")
-DF_TARRAGONA <- create_DF_GEOM(41.1258621, 1.1973837,"2024-03-01","2024-03-23")
+DF_TARRAGONA <- create_DF_GEOM(41.1258621, 1.1973837,"2024-03-01","2024-03-28")
 
 
 # Ho GUARDO com a SHAPE
@@ -307,7 +283,7 @@ st_write(DF_LLEIDA, "data/processed/LLEIDA_v1.shp", delete_layer = TRUE)
 st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 
 
-
+# ------------------------------------------
 # ----- COMARQUES CATALUNYA PROJECTE -------
 # ------------------------------------------
 
@@ -317,15 +293,134 @@ st_write(DF_TARRAGONA, "data/processed/TARRAGONA_v1.shp", delete_layer = TRUE)
 # Calculaar per UN DIA les dades de TEMP, HUMITAT,...
 # Visaulitzar-ho al QGIS
 
-# SHAHPE
+# DADES = SHAPE Comarques
 
 comarques <- st_read("data/raw/comarques.shp")
 
-comarques_centroide <-  comarques %>%
+
+
+# --- OBTENCIÓ DE LATITUTD LONGITUD ----
+# --------------------------------------
+
+
+#     -) NECESSITO OBTENCIÓ Lat - Long
+#     -) En 4326 (Google Maps)
+#     -) Ja que la API de OPEN METEO obté dades amb 4326
+
+
+# VERSIÓ 01
+
+Alt_Camp <- comarques %>%
+  filter(NOMCOMAR=='Alt Camp') %>%
   mutate(
     centoride = st_centroid(geometry),
-    CRS =  
+    CRS_WGS84 =  st_transform(centoride, 4326),
+    Coords = st_coordinates(CRS_WGS84)
   )
+
+Alt_Camp 
+
+# VERSIÓ 02
+
+Alt_Camp_2 <- comarques %>%
+  filter(NOMCOMAR=='Alt Camp') %>%
+  mutate(
+    coords = st_centroid(geometry) %>%
+      st_transform(4326) %>% 
+      st_coordinates() ,
+    lat = coords[,1],
+    long = coords[,2]
+  )
+
+Alt_Camp_2
+
+
+# VERSIÓ 03 = TOT CATALUNYA
+
+
+comarques_xy <- comarques %>%
+  mutate(
+    coords = st_centroid(geometry) %>%
+      st_transform(4326) %>% 
+      st_coordinates() ,
+    lat = coords[,1],
+    long = coords[,2]
+  )
+
+comarques_xy
+
+
+
+# ------------ UNIR SHAPES   -----------
+# --------------------------------------
+
+#     -) Si tinc 4 SHAPES 
+#     -) Els he de unir en un SOL SHAPE
+
+
+create_coords <- function(data,nom){
+  
+  data_processed <- data %>%
+    filter(NOMCOMAR==nom) %>%
+    mutate(
+      coords = st_centroid(geometry) %>%
+        st_transform(4326) %>% 
+        st_coordinates() ,
+      lat = coords[,1],
+      long = coords[,2]
+    )
+  
+  long <- data_processed$long
+  lat <- data_processed$lat
+  
+  return(list(
+    long = long,
+    lat =lat
+  ))
+  
+}
+
+BCNES <- create_coords(comarques,'Barcelonès')
+GIRONES <- create_coords(comarques,'Gironès')
+TARRAGONES <- create_coords(comarques,'Tarragonès')
+SEGRIA <- create_coords(comarques,'Segrià')
+
+
+DF_BCNES <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-28")
+DF_GIRONES <- create_DF_GEOM(GIRONES$long,GIRONES$lat,"2024-03-01","2024-03-28")
+DF_SEGRIA <- create_DF_GEOM(SEGRIA$long, SEGRIA$lat,"2024-03-01","2024-03-28")
+DF_TARRAGONA <- create_DF_GEOM(TARRAGONES$long, TARRAGONES$lat,"2024-03-01","2024-03-28")
+
+
+# UNIR SHAPES: 
+
+
+sf_total <- rbind(DF_BCNES,DF_GIRONES,DF_SEGRIA,DF_TARRAGONA)
+
+st_write(sf_total, "data/processed/COMARQUES_CAPITALS.shp", delete_layer = TRUE)
+
+
+
+
+
+
+
+#   He de trobar un forma de automatizar-ho
+#   Ara puc calcular totes les LAT i LONG dels centroides de comarques
+#   Podria caclular per un dia o més les temp i humitats de cada punt
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
