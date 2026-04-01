@@ -4,9 +4,7 @@ library(sf)
 library(httr)
 library(jsonlite)
 library(tidyverse)
-library(ggplot2)
 library(dplyr)
-library(readr)
 
 
 #  ------- FUNCIÓ 01 = DADES API ---------
@@ -351,11 +349,13 @@ comarques_xy
 
 
 
-# ------------ UNIR SHAPES   -----------
-# --------------------------------------
+# ------------ CREAR SHAPE CAPITAL COMARQUES -----------
+# -----------------------------------------------------
 
-#     -) Si tinc 4 SHAPES 
-#     -) Els he de unir en un SOL SHAPE
+#     -) Crear de les 4 COMARQUES = 4 CENTROIDS
+#     -) De cada CENTROID = Buscar al info de TEMP, HUMITAT,...
+#     -) Tindre 4 SHAPES POINTS 
+#     -) Els UNEIXO en un SOL SHAPE
 
 
 create_coords <- function(data,nom){
@@ -391,16 +391,46 @@ DF_GIRONES <- create_DF_GEOM(GIRONES$long,GIRONES$lat,"2024-03-01","2024-03-01")
 DF_SEGRIA <- create_DF_GEOM(SEGRIA$long, SEGRIA$lat,"2024-03-01","2024-03-01")
 DF_TARRAGONA <- create_DF_GEOM(TARRAGONES$long, TARRAGONES$lat,"2024-03-01","2024-03-01")
 
-
 # UNIR SHAPES: 
 
-
 sf_total <- rbind(DF_BCNES,DF_GIRONES,DF_SEGRIA,DF_TARRAGONA)
-
 st_write(sf_total, "data/processed/COMARQUES_CAPITALS.shp", delete_layer = TRUE)
 
 
+# ------------ CREAR TOTES COMARQUES -----------
+# ----------------------------------------------
 
+#     -) Crear TOTS CENTROIDES COMERQUES
+#     -) De cada CENTROID = Buscar al info de TEMP, HUMITAT,...
+#     -) Tindre 4 SHAPES POINTS 
+#     -) Els UNEIXO en un SOL SHAPE
+
+
+BCNES <- create_coords(comarques,'Barcelonès')
+DF_BCNES <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-01")
+
+
+create_shape <- function(df,data_inici,data_final){
+  
+  
+}
+
+create_shape(comarques,"2024-03-01","2024-03-01")
+
+long <- length(comarques$CODICOMAR) 
+
+llista <- c()
+
+for(i in 1:long){
+  
+  nom_comarca <- comarques$NOMCOMAR[i]
+  coord_comarca <- create_coords(comarques,nom_comarca)
+  comarca_DF_GEOM <- create_DF_GEOM(BCNES$long,BCNES$lat,"2024-03-01","2024-03-01")
+  comarca_DF_GEOM %>% mutate( nom_comarca = nom_comarca )
+  sf_total <- rbind(sf_total, comarca_DF_GEOM)
+}
+
+class(sf_total)
 
 
 
